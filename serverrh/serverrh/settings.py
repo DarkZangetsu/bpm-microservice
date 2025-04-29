@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',
+    'corsheaders',
+    'rh_app',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -48,6 +53,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+GRAPHENE = {
+    'SCHEMA': 'schema_root.schema'
+}
+
+# URLs des services externes
+EMPLOYEE_SERVICE_URL = 'http://localhost:8001/graphql/'
+ASSURANCE_SERVICE_URL = 'http://localhost:8002/graphql/'
+
 
 ROOT_URLCONF = 'serverrh.urls'
 
