@@ -1,0 +1,93 @@
+les query des etapes : 
+
+etape 1
+
+mutation CreateUtilisateur {
+    createUtilisateur(
+        input: {
+            nom: "Dupont"
+            prenom: "Jean"
+            email: "jean.dupont@example.com"
+            role: "EMPLOYE"
+            motDePasse:"1234" 
+        }
+    ) {
+        utilisateur {
+            utilisateurId
+            nom
+            prenom
+            email
+            role
+            motDePasse
+        }
+    }
+}
+
+
+etape 2 : 
+
+mutation CreateCompagnie {
+    createCompagnie(
+        input: {
+            nomCompagnie: "AssuranceCorp"
+            adresseCompagnie: "123 Rue de l'Assurance"
+            emailCompagnie: "contact@assurancecorp.com"
+            apiUrl: "http://localhost:8002/graphql"
+        }
+    ) {
+        compagnie {
+            compagnieId
+            nomCompagnie
+            adresseCompagnie
+            emailCompagnie
+            apiUrl
+        }
+    }
+}
+
+
+etape 3 : 
+mutation CreateInformation {
+    createInformation(
+        input: {
+            utilisateurId: 1
+            numeroEmploye: "EMP123"
+            adresse: "456 Rue des Employés"
+            numeroAssurance: "ASS456"
+            cin: "ID789"
+            statut: true
+            compagnieAssuranceId: 1
+            emailNotification: "jean.dupont@example.com"
+        }
+    ) {
+        information {
+            informationId
+            numeroEmploye
+            adresse
+            numeroAssurance
+            cin
+            statut
+            emailNotification
+            utilisateur {
+                utilisateurId
+                nom
+                prenom
+            }
+            compagnieAssurance {
+                compagnieId
+            }
+        }
+    }
+}
+
+
+etape 4 : 
+query AllHistoriques {
+    allHistoriques {
+        historiqueId
+        date
+        typeAction
+        description
+    }
+}
+

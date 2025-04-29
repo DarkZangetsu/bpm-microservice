@@ -80,9 +80,10 @@ SIMPLE_JWT = {
 }
 
 
+
 # URLs des services externes
-EMPLOYEE_SERVICE_URL = 'http://localhost:8001/graphql/'
-ASSURANCE_SERVICE_URL = 'http://localhost:8002/graphql/'
+EMPLOYEE_SERVICE_URL = 'http://localhost:8001' 
+INSURANCE_SERVICE_URL = 'http://localhost:8002'
 
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:3000",

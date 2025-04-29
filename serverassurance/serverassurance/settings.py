@@ -80,7 +80,7 @@ SIMPLE_JWT = {
 }
 
 # URL du service RH
-RH_SERVICE_URL = 'http://localhost:8000/graphql/'
+RH_SERVICE_URL = "http://localhost:8000/graphql/" 
 
 
 CSRF_TRUSTED_ORIGINS = [

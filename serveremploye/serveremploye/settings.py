@@ -80,7 +80,7 @@ SIMPLE_JWT = {
 }
 
 
-RH_SERVICE_URL = 'http://localhost:8000/graphql/'
+RH_SERVICE_URL = "http://localhost:8000/graphql/"
 
 # CORS_ALLOWED_ORIGINS = [
 #     "http://localhost:3000",

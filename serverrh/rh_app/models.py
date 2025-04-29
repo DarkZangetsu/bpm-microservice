@@ -5,8 +5,7 @@ from django.utils.html import strip_tags
 import requests
 import json
 from django.conf import settings
-
-
+        
 class Utilisateur(models.Model):
     utilisateur_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
@@ -110,47 +109,67 @@ class Information(models.Model):
     
     def notifier_microservices(self, notification):
         """Envoie les notifications aux microservices employé et assurance"""
+       
         # Données à envoyer
         data = {
-            "information_id": self.information_id,
+            "informationId": self.information_id,  # Utiliser camelCase pour GraphQL
             "utilisateur": {
                 "id": self.utilisateur.utilisateur_id,
                 "nom": self.utilisateur.nom,
                 "prenom": self.utilisateur.prenom,
                 "email": self.utilisateur.email
             },
-            "numero_employe": self.numero_employe,
+            "numeroEmploye": self.numero_employe,  # Utiliser camelCase
             "adresse": self.adresse,
-            "numero_assurance": self.numero_assurance,
+            "numeroAssurance": self.numero_assurance,  # Utiliser camelCase
             "cin": self.cin,
             "statut": self.statut,
             "notification": {
                 "id": notification.notification_id,
                 "objet": notification.objet,
                 "contenu": notification.contenu,
-                "date_envoi": notification.date_envoi.isoformat(),
+                "dateEnvoi": notification.date_envoi.isoformat(),  # Utiliser camelCase
             }
         }
         
         # Notification au microservice Employé
         try:
+            # S'assurer que l'URL est correcte
+            employee_url = settings.EMPLOYEE_SERVICE_URL
+            if not employee_url.endswith('/'):
+                employee_url += '/'
+            employee_url += 'graphql/'
+            
+            print(f"Envoi de requête GraphQL au service Employé: {employee_url}")
+            print(f"Payload: {json.dumps(data, indent=2)}")
+            
             response = requests.post(
-                settings.EMPLOYEE_SERVICE_URL,
-                json={"query": """
-                    mutation UpdateEmployeeInfo($input: UpdateEmployeeInfoInput!) {
-                        updateEmployeeInfo(input: $input) {
-                            success
-                            message
+                employee_url,
+                json={
+                    "query": """
+                        mutation UpdateEmployeeInfo($input: UpdateEmployeeInfoInput!) {
+                            updateEmployeeInfo(input: $input) {
+                                success
+                                message
+                            }
                         }
+                    """,
+                    "variables": {
+                        "input": data
                     }
-                """,
-                "variables": {
-                    "input": data
-                }},
+                },
                 headers={"Content-Type": "application/json"}
             )
             
+            print(f"Réponse du service Employé: {response.status_code} - {response.text}")
+            
             if response.status_code == 200:
+                result = response.json()
+                if "data" in result and "updateEmployeeInfo" in result["data"]:
+                    success = result["data"]["updateEmployeeInfo"]["success"]
+                    message = result["data"]["updateEmployeeInfo"]["message"]
+                    print(f"Traitement réussi: success={success}, message={message}")
+                    
                 notification.enregistrer_dans_historique(
                     type_action="notification_employee_success",
                     description="Notification envoyée avec succès au service Employé"
@@ -161,31 +180,51 @@ class Information(models.Model):
                     description=f"Échec de l'envoi de notification au service Employé: {response.text}"
                 )
         except Exception as e:
+            print(f"ERREUR lors de l'envoi de notification au service Employé: {str(e)}")
             notification.enregistrer_dans_historique(
                 type_action="notification_employee_error",
                 description=f"Erreur lors de l'envoi de notification au service Employé: {str(e)}"
             )
         
         # Notification au microservice Assurance (si lié à une compagnie d'assurance)
-        if self.compagnie_assurance and self.compagnie_assurance.api_url:
+        if self.compagnie_assurance:
             try:
+                # S'assurer que l'URL est correcte pour l'API de la compagnie d'assurance
+                insurance_url = settings.INSURANCE_SERVICE_URL
+                if not insurance_url.endswith('/'):
+                    insurance_url += '/'
+                insurance_url += 'graphql/'
+                
+                print(f"Envoi de requête GraphQL au service Assurance: {insurance_url}")
+                print(f"Payload: {json.dumps(data, indent=2)}")
+                
                 response = requests.post(
-                    self.compagnie_assurance.api_url,
-                    json={"query": """
-                        mutation UpdateInsuranceInfo($input: UpdateInsuranceInfoInput!) {
-                            updateInsuranceInfo(input: $input) {
-                                success
-                                message
+                    insurance_url,
+                    json={
+                        "query": """
+                            mutation UpdateInsuranceInfo($input: UpdateInsuranceInfoInput!) {
+                                updateInsuranceInfo(input: $input) {
+                                    success
+                                    message
+                                }
                             }
+                        """,
+                        "variables": {
+                            "input": data
                         }
-                    """,
-                    "variables": {
-                        "input": data
-                    }},
+                    },
                     headers={"Content-Type": "application/json"}
                 )
                 
+                print(f"Réponse du service Assurance: {response.status_code} - {response.text}")
+                
                 if response.status_code == 200:
+                    result = response.json()
+                    if "data" in result and "updateInsuranceInfo" in result["data"]:
+                        success = result["data"]["updateInsuranceInfo"]["success"]
+                        message = result["data"]["updateInsuranceInfo"]["message"]
+                        print(f"Traitement réussi: success={success}, message={message}")
+                        
                     notification.enregistrer_dans_historique(
                         type_action="notification_insurance_success",
                         description=f"Notification envoyée avec succès à la compagnie {self.compagnie_assurance.nom_compagnie}"
@@ -196,6 +235,7 @@ class Information(models.Model):
                         description=f"Échec de l'envoi de notification à la compagnie {self.compagnie_assurance.nom_compagnie}: {response.text}"
                     )
             except Exception as e:
+                print(f"ERREUR lors de l'envoi de notification au service Assurance: {str(e)}")
                 notification.enregistrer_dans_historique(
                     type_action="notification_insurance_error",
                     description=f"Erreur lors de l'envoi de notification à la compagnie {self.compagnie_assurance.nom_compagnie}: {str(e)}"
