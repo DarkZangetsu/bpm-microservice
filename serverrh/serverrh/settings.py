@@ -84,10 +84,10 @@ SIMPLE_JWT = {
 EMPLOYEE_SERVICE_URL = 'http://localhost:8001/graphql/'
 ASSURANCE_SERVICE_URL = 'http://localhost:8002/graphql/'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8000"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://localhost:8000"
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",

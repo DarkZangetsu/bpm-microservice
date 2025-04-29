@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'employee_app',
+    'employe_app',
     'graphene_django',
     'corsheaders',
     'rest_framework',
@@ -82,14 +82,14 @@ SIMPLE_JWT = {
 
 RH_SERVICE_URL = 'http://localhost:8000/graphql/'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8000"
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "http://localhost:8000"
+# ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:8000"
+    "http://localhost:8001"
 ]
 
 

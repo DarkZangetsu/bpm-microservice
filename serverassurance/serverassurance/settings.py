@@ -82,14 +82,10 @@ SIMPLE_JWT = {
 # URL du service RH
 RH_SERVICE_URL = 'http://localhost:8000/graphql/'
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:8000"
-]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
-    "http://localhost:8000"
+    "http://localhost:8002"
 ]
 
 
