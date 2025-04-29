@@ -1,0 +1,48 @@
+services:
+  serverrh:
+    build:
+      context: ./serverrh
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./serverrh:/app
+    environment:
+      - PYTHONPATH=/app
+    networks:
+      - app-network
+
+  serverassurance:
+    build:
+      context: ./serverassurance
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./serverassurance:/app
+    environment:
+      - PYTHONPATH=/app
+    networks:
+      - app-network
+    depends_on:
+      - serverrh
+
+  serveremploye:
+    build:
+      context: ./serveremploye
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./serveremploye:/app
+    environment:
+      - PYTHONPATH=/app
+    networks:
+      - app-network
+    depends_on:
+      - serverrh
+      - serverassurance
+
+networks:
+  app-network:
+    driver: bridge

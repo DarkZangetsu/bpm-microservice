@@ -2,7 +2,7 @@ FROM python:3.12
 
 WORKDIR /app
 
-COPY lemadio_web_server .
+COPY . .
 
 COPY requirements.txt .
 
