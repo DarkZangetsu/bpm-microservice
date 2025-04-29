@@ -105,7 +105,7 @@ class NotificationService:
                 "email": information.utilisateur.email
             }
             
-            # Utiliser la convention camelCase pour les microservices Employé et Assurance
+            # Utilisation de la convention camelCase pour les microservices Employé et Assurance
             mutation_input = {
                 "informationId": information.information_id,  
                 "utilisateur": utilisateur_data,
@@ -193,7 +193,7 @@ class NotificationService:
                 expediteur="Système RH",
                 destinataire="Services concernés",
                 statut=True,
-                date_envoi=timezone.now()  # Ajout de la date d'envoi
+                date_envoi=timezone.now() 
             )
         
         # Notifier le service des employés

@@ -19,7 +19,7 @@ class Utilisateur(models.Model):
         return f"{self.prenom} {self.nom}"
     
     def save(self, *args, **kwargs):
-        # Synchroniser les informations avec le User associé
+        # Synchronisation des informations avec le User associé
         if self.user and (self.email or self.nom or self.prenom):
             if self.email:
                 self.user.email = self.email
@@ -98,7 +98,7 @@ class Information(models.Model):
         if self.email_notification:
             email_recipients.append(self.email_notification)
         
-        # Ajouter l'email de la compagnie d'assurance s'il existe
+        # Ajout de l'email de la compagnie d'assurance s'il existe
         if self.compagnie_assurance and self.compagnie_assurance.email_compagnie:
             email_recipients.append(self.compagnie_assurance.email_compagnie)
         
@@ -112,23 +112,23 @@ class Information(models.Model):
        
         # Données à envoyer
         data = {
-            "informationId": self.information_id,  # Utiliser camelCase pour GraphQL
+            "informationId": self.information_id,
             "utilisateur": {
                 "id": self.utilisateur.utilisateur_id,
                 "nom": self.utilisateur.nom,
                 "prenom": self.utilisateur.prenom,
                 "email": self.utilisateur.email
             },
-            "numeroEmploye": self.numero_employe,  # Utiliser camelCase
+            "numeroEmploye": self.numero_employe,  
             "adresse": self.adresse,
-            "numeroAssurance": self.numero_assurance,  # Utiliser camelCase
+            "numeroAssurance": self.numero_assurance,  
             "cin": self.cin,
             "statut": self.statut,
             "notification": {
                 "id": notification.notification_id,
                 "objet": notification.objet,
                 "contenu": notification.contenu,
-                "dateEnvoi": notification.date_envoi.isoformat(),  # Utiliser camelCase
+                "dateEnvoi": notification.date_envoi.isoformat(),  
             }
         }
         
@@ -274,7 +274,7 @@ class Information(models.Model):
         try:
             print(f"Tentative d'envoi d'email à {', '.join(recipients)}")
             
-            # Utiliser la fonction d'envoi d'email de Django
+            # Utilisation la fonction d'envoi d'email de Django
             from django.core.mail import send_mail
             send_mail(
                 subject=sujet,
