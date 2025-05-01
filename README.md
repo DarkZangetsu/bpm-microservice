@@ -49,7 +49,7 @@ mutation CreateUtilisateur {
 
 ---
 
-### 2️⃣ Créer une compagnie d’assurance (sur le service Assurance)
+### 2️⃣ Créer une compagnie d’assurance (sur le service RH)
 ```graphql
 mutation CreateCompagnie {
   createCompagnie(
@@ -73,7 +73,7 @@ mutation CreateCompagnie {
 
 ---
 
-### 3️⃣ Créer une information d’employé (sur le service Employé)
+### 3️⃣ Créer une information d’employé (sur le service RH)
 ```graphql
 mutation CreateInformation {
   createInformation(
